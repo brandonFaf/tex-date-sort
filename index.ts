@@ -39,14 +39,14 @@ const sortEntries = async (fileName: string) => {
     .match(/\s\s\\rownumber\n(?:(?:\s\s&).*\n)*/gi)
     ?.sort((a, b) => {
       const dateA = a.split('& ')[2].trim();
-      const dateb = b.split('& ')[2].trim();
+      const dateB = b.split('& ')[2].trim();
       if (dateA === '\\DATE') {
         return 1;
       }
-      if (dateb === '\\DATE') {
+      if (dateB === '\\DATE') {
         return -1;
       }
-      return isBefore(dateA, dateb);
+      return isBefore(dateA, dateB);
     });
 
   const [name, extension] = fileName.split('.');
