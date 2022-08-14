@@ -36,7 +36,7 @@ const sortEntries = async (fileName: string) => {
   const head = text.substring(0, firstRow);
   const tail = text.substring(text.indexOf('\t\\end{longtable}'), text.length);
   const matches = text
-    .match(/\s\s\\rownumber\n(?:(?:\s\s&).*\n)*/gi)
+    .match(/\s\s\\rownumber\n(?:(?:\s\s&).*\n)*.*\n(.*)\\\\\n?/gi)
     ?.sort((a, b) => {
       const dateA = a.split('& ')[2].trim();
       const dateB = b.split('& ')[2].trim();
@@ -49,10 +49,15 @@ const sortEntries = async (fileName: string) => {
       return isBefore(dateA, dateB);
     });
 
+  matches?.forEach(m => {
+    if (m.indexOf('108-KSC-70P-497') > 0) console.log(m);
+  });
+
   const [name, extension] = fileName.split('.');
   await Deno.writeTextFile(
     `./${name}-sorted.${extension}`,
-    `${head}${matches?.join('\n') ?? ''}${tail}`
+    `${head}${matches?.join('\n') ?? ''}
+${tail}`
   );
   console.info(`finished sorting ${fileName}`);
 };
